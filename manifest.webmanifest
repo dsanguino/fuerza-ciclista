@@ -1,0 +1,30 @@
+{
+ "name": "Fuerza ciclista",
+ "short_name": "Fuerza",
+ "description": "60 ejercicios de fuerza para ciclistas con registro de sesiones.",
+ "lang": "es",
+ "start_url": "./",
+ "scope": "./",
+ "display": "standalone",
+ "orientation": "portrait",
+ "background_color": "#0d2a4a",
+ "theme_color": "#0d2a4a",
+ "icons": [
+  {
+   "src": "icon-192.png",
+   "sizes": "192x192",
+   "type": "image/png"
+  },
+  {
+   "src": "icon-512.png",
+   "sizes": "512x512",
+   "type": "image/png"
+  },
+  {
+   "src": "icon-maskable.png",
+   "sizes": "512x512",
+   "type": "image/png",
+   "purpose": "maskable"
+  }
+ ]
+}
