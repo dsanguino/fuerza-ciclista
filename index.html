@@ -2,6 +2,8 @@
 <html lang="es">
 <head>
 <meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; frame-src https://www.youtube-nocookie.com; connect-src 'self'; manifest-src 'self'; worker-src 'self'; base-uri 'none'; form-action 'none'; object-src 'none'">
+<meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#0d2a4a">
 <meta name="mobile-web-app-capable" content="yes">
@@ -173,6 +175,20 @@ body.wk .timer{display:none!important}
 #cele svg{width:96px;height:96px}
 @media(prefers-reduced-motion:no-preference){#cele.on .cc{animation:pop .35s ease}@keyframes pop{from{transform:scale(.8);opacity:0}to{transform:none;opacity:1}}}
 .tag.pr{background:color-mix(in srgb,#e0a100 35%,transparent)}
+.vbtn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;min-height:48px;border-radius:12px;border:1px solid var(--line);background:var(--card);font-weight:600;font-size:16px;margin:0 0 10px}
+.vbtn svg{width:20px;height:20px;color:#e0242a}
+.vfr{position:relative;width:100%;aspect-ratio:16/9;border-radius:12px;overflow:hidden;background:#000}
+.vfr.sh{width:auto;height:min(62vh,560px);aspect-ratio:9/16;margin:0 auto}
+.vfr iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.vmsg{background:color-mix(in srgb,var(--orange) 13%,transparent);border-radius:12px;padding:12px 14px;font-size:15px;margin:0 0 8px}
+.vmsg b{display:block;color:var(--orange)}
+.vmsg p{margin:4px 0 0}
+.vact{display:flex;justify-content:space-between;gap:8px;margin-bottom:6px}
+.vchg{margin:6px 0 10px}
+.vchg label{font-size:13px;color:var(--mute);display:block;margin-bottom:4px}
+.vchg input{width:100%;min-height:50px;border:1px solid var(--line);background:var(--card);border-radius:10px;padding:8px 10px;font-size:16px;margin-bottom:8px}
+.vbox:empty{display:none}
+.vbox{margin-bottom:10px}
 </style>
 </head>
 <body>
@@ -287,7 +303,7 @@ const ses=Object.keys(SES).find(k=>SES[k].ids.includes(n))||'Libre';
 const ph=phase(week()),sug=sr.match(/(\d+)\s*×\s*(\d+)/);
 const v=k=>l&&l[k]!=null?l[k]:k==='sets'&&sug?(ph==='Base'||ph==='Descarga'?Math.min(2,Number(sug[1])):Number(sug[1])):k==='reps'&&sug?Number(sug[2]):'';
 $('sheet').innerHTML='<div class="sh"><div class="n">'+String(n).padStart(2,'0')+'<small>de 60</small></div><div><h3>'+esc(t)+'</h3><div class="ct" style="color:'+CAT[c][1]+'">'+CAT[c][0]+' · '+eq.split('').map(k=>EQ[k]).join(', ')+'</div></div><button data-x="close" aria-label="Cerrar">×</button></div>'+
-'<div class="last">'+(l?'Última vez ('+fmt(l.date)+'): <b>'+esc(summ(l))+'</b>':'Sugerido: <b>'+esc(sr)+'</b> · fase '+ph.toLowerCase())+'</div>'+
+'<div class="last">'+(l?'Última vez ('+fmt(l.date)+'): <b>'+esc(summ(l))+'</b>':'Sugerido: <b>'+esc(sr)+'</b> · fase '+ph.toLowerCase())+'</div>'+vidUI(n,'vb-s')+
 '<form id="lf" data-n="'+n+'"><div class="f"><div><label for="fs">Series</label><input id="fs" inputmode="numeric" type="number" min="0" value="'+esc(v('sets'))+'"></div><div><label for="fr">Reps</label><input id="fr" inputmode="numeric" type="number" min="0" value="'+esc(v('reps'))+'"></div><div><label for="fk">Kg</label><input id="fk" inputmode="decimal" type="number" step="0.5" min="0" value="'+esc(v('kg'))+'"></div>'+
 '<div><label for="fb">Banda</label><select id="fb">'+BANDS.map(b=>'<option'+(b===(v('band')||(eq.includes('b')?'Media':'Sin banda'))?' selected':'')+'>'+b+'</option>').join('')+'</select></div><div><label for="fp">RPE</label><select id="fp"><option value=""></option>'+[5,6,7,8,9,10].map(r=>'<option'+(String(r)===String(v('rpe')||'')?' selected':'')+'>'+r+'</option>').join('')+'</select></div><div><label for="fd">Fecha</label><input id="fd" type="date" value="'+today()+'" style="font-size:14px"></div></div>'+
 '<div class="fx"><label for="fn"><span>Dolor de rodilla</span><b id="fno">0</b></label><input id="fn" type="range" min="0" max="10" value="0"></div>'+
@@ -296,7 +312,7 @@ $('sheet').innerHTML='<div class="sh"><div class="n">'+String(n).padStart(2,'0')
 '<details class="kv"'+(l?'':' open')+'><summary>Técnica</summary><p><b>Objetivo:</b> '+esc(o)+'</p><p><b>Músculos:</b> '+esc(m)+'</p><p><b>Posición inicial:</b> '+esc(p)+'</p><b>Ejecución</b><ol>'+e.map(s=>'<li>'+esc(s)+'</li>').join('')+'</ol><p><b>Errores a evitar:</b> '+esc(er)+'</p><p><b>Versión sencilla:</b> '+esc(fa)+'</p><p><b>Progresión:</b> '+esc(ad)+'</p>'+(kn?'<div class="kn"><b>Rodilla:</b> '+esc(kn)+'</div>':'')+'</details>';
 if(!$('ov').classList.contains('open')){try{history.pushState({sh:1},'')}catch(e){}}
 $('ov').classList.add('open');$('sheet').scrollTop=0}
-const hideSheet=()=>$('ov').classList.remove('open');
+const hideSheet=()=>{$('ov').classList.remove('open');stopVid('vb-s')};
 const closeSheet=()=>{if(history.state&&history.state.sh){try{history.back();return}catch(e){}}hideSheet()};
 window.addEventListener('popstate',()=>{hideSheet();if($('wv').classList.contains('on'))pauseRun()});
 let tEnd=0,tH=null,wl=null;
@@ -309,7 +325,7 @@ const stopT=()=>{clearInterval(tH);tH=null;tEnd=0;$('timer').classList.remove('o
 
 async function copy(text,msg){try{await navigator.clipboard.writeText(text);toast(msg);return true}catch(e){const t=document.createElement('textarea');t.value=text;document.body.appendChild(t);t.select();let ok=false;try{ok=document.execCommand('copy')}catch(_){}t.remove();toast(ok?msg:'No se pudo copiar en este navegador');return ok}}
 
-document.addEventListener('click',async ev=>{const b=ev.target.closest('[data-t],[data-ses],[data-cat],[data-open],[data-x],[data-ask],[data-del],[data-rpe]');if(!b)return;const d=b.dataset;
+document.addEventListener('click',async ev=>{const b=ev.target.closest('[data-t],[data-ses],[data-cat],[data-open],[data-x],[data-ask],[data-del],[data-rpe]');if(b&&b.dataset.x&&b.dataset.x[0]==='v'&&b.dataset.vn){vidAction(b.dataset.x,Number(b.dataset.vn),b.dataset.vb);return}if(!b)return;const d=b.dataset;
 if(d.t){st.tab=d.t;st.confirm=null;render();window.scrollTo(0,0)}
 else if(d.ses){st.ses=d.ses;render()}
 else if(d.cat!==undefined){st.cat=d.cat;render()}
@@ -376,7 +392,7 @@ function fillCur(){const R=S.run,n=R.ids[R.i],p=planOf(n),l=lastOf(n),eq=X[n-1][
 R.cur={n,sets:p.sets,reps:l&&l.reps!==''&&l.reps!=null?l.reps:p.reps,kg:l&&l.kg!==''&&l.kg!=null?l.kg:'',band:l&&l.band?l.band:(eq.includes('b')?'Media':'Sin banda'),done:0,rpe:'',knee:0,note:''};R.set=1;R.phase='set'}
 function startRun(){S.run={ses:st.ses,ids:SES[st.ses].ids.slice(),i:0,set:1,t0:Date.now(),date:today(),saved:[],prs:[],phase:'set'};fillCur();save();openRun();beep(660,.06)}
 function openRun(){if(!S.run)return;if(S.run.phase==='rest'||S.run.phase==='timing')S.run.phase='set';$('wv').classList.add('on');document.body.classList.add('wk');try{history.pushState({wk:1},'')}catch(e){}renderRun();lock()}
-function pauseRun(){clearInterval(wH);wH=null;$('wv').classList.remove('on');document.body.classList.remove('wk');render()}
+function pauseRun(){stopVid('vb-w');clearInterval(wH);wH=null;$('wv').classList.remove('on');document.body.classList.remove('wk');render()}
 function wTick(){const R=S.run;if(!R){clearInterval(wH);wH=null;return}const s=Math.max(0,Math.ceil((wEnd-Date.now())/1000)),el=$('wcd');
 if(el)el.textContent=R.phase==='rest'?Math.floor(s/60)+':'+String(s%60).padStart(2,'0'):String(s);
 if(s<=3&&s>0&&s!==lastB){lastB=s;beep(660,.08)}
@@ -407,7 +423,7 @@ v.innerHTML=head+'<div class="wb"><h2 class="xn">'+(es.length?'Sesión completad
 '<p class="t2">Recuerda pasar los registros al Sheet desde la pestaña Registro.</p><button class="btn" data-x="wClose">Cerrar</button></div>';return}
 const c=R.cur,n=c.n,x=X[n-1],p=planOf(n),l=lastOf(n),eq=x[2],useKg=eq.includes('m')||(c.kg!==''&&c.kg!=null),useB=eq.includes('b');
 let body='<div><p class="t2" style="color:'+CAT[x[0]][1]+';font-weight:600">'+CAT[x[0]][0]+'</p><h2 class="xn">'+n+'. '+esc(x[1])+'</h2><p class="t2">Meta: '+esc(x[7])+(l?' · última: '+esc(summ(l)):'')+'</p></div>'+
-(x[11]?'<div class="kn" style="margin:0"><b>Rodilla:</b> '+esc(x[11])+'</div>':'')+
+vidUI(n,'vb-w')+(x[11]?'<div class="kn" style="margin:0"><b>Rodilla:</b> '+esc(x[11])+'</div>':'')+
 '<details class="kv" style="margin:0"><summary>Ver técnica</summary><ol>'+x[6].map(s=>'<li>'+esc(s)+'</li>').join('')+'</ol><p><b>Errores a evitar:</b> '+esc(x[8])+'</p><p><b>Versión sencilla:</b> '+esc(x[9])+'</p></details>';
 if(R.phase==='finish'){body+='<div class="setn">'+c.done+' <small>'+(c.done===1?'serie hecha':'series hechas')+'</small></div>'+
 '<div><label class="t2">Esfuerzo (RPE)</label><div class="rpe">'+[5,6,7,8,9,10].map(r=>'<button data-rpe="'+r+'" aria-pressed="'+(c.rpe===r)+'">'+r+'</button>').join('')+'</div></div>'+
@@ -424,6 +440,29 @@ else if(R.phase==='timing')body+='<div><p class="cdl">En curso</p><div class="cd
 else body+=(p.secs?'<button class="bigb" data-x="wTime">Iniciar '+(c.reps||p.secs)+' s</button><button class="lnk" data-x="wSet">Marcar serie sin cronómetro</button>':'<button class="bigb" data-x="wSet">Serie hecha</button>');
 body+='<div class="wf"><button class="lnk" data-x="wNext">Saltar ejercicio</button><button class="lnk" data-x="wEnd">Terminar sesión</button></div>'}
 v.innerHTML=head+'<div class="wb">'+body+'</div>';if((R.phase==='rest'||R.phase==='timing')&&wH)wTick()}
+
+const VID={"1": "lmRIncjy39o", "2": "rNfz7E6PjzY", "3": "x7W2BOKWWKs", "4": "IpSouV9cPxQ", "5": "tB-Dog41twg", "6": "IdilLr9nyuQ", "7": "PvLQhG0vxmE", "8": "PYpUze9SLFA", "9": "mGTJtgmYgRw", "10": "L3nDMl7bMTw", "11": "pbqYDNHBWj4", "12": "p9s0hsP_qLI", "13": "RQNKFemP6vo", "14": "u2p6nH7WEhE", "15": "uekWubRW-QA", "16": "gzrFyR1QlMs", "17": "TtNNetcesvg", "18": "s:ZRAa5RzL3rE", "19": "TQx8aYSoj1w", "20": "3iTX7S0kONg", "21": "4pGRt8aLH7I", "22": "HN3wyEcYC2g", "23": "yhFTbI1vN4M", "24": "nxKAmp10lSg", "25": "nUBd1xcP1R8", "26": "X5ZRWP_AHPw", "27": "58zoUXlwDRM", "28": "7o-EHYhFcl8", "29": "ZUYem2mnVMU", "30": "radVWm-e81I", "31": "fZYGcNtMWSc", "32": "7Ks6tmEuKNo", "33": "TDZ4o3B9NEs", "34": "s:txems7GVO5c", "35": "7p4l-KnxxaY", "36": "s:dDQm3vHnLNY", "37": "Sc4u0eTL71c", "38": "fXgXwfosyhk", "39": "YVmEWu_Vl8c", "40": "s:eHY09oHxzQg", "41": "V3LaKO8iZUE", "42": "RHdacbwKbTo", "43": "PyNaiTP1PIA", "44": "gAJs_NSzWus", "45": "m8knaveyi2E", "46": "wZIStx5EmpA", "47": "mu61P4cs_lc", "48": "s:Km4Jt6mLkIY", "49": "5UiHopYrGM0", "50": "FSWLYQIkDxY", "51": "Hq0vpuV1bhs", "52": "s:cUwwMgwD4ko", "53": "1YT7HwNmDSQ", "54": "HmfHMdmmVhc", "55": "W538T-Sa6pU", "56": "5kwx1UU5exI", "57": "HfWa2Gf-T7c", "58": "2wluWoyFH6g", "59": "ZXgkMIvXJ3E", "60": "1JEgLZ9NHf8"};
+const vidOf=n=>{const c=S.vids&&S.vids[n];if(c&&/^[A-Za-z0-9_-]{11}$/.test(c.id))return c;const v=VID[n];if(!v)return null;return v.startsWith('s:')?{id:v.slice(2),s:1}:{id:v,s:0}};
+const ytId=t=>{t=(t||'').trim();const m=t.match(/(?:youtu\.be\/|[?&]v=|\/shorts\/|\/embed\/|\/live\/)([A-Za-z0-9_-]{11})/)||t.match(/^([A-Za-z0-9_-]{11})$/);return m?m[1]:null};
+const VICON='<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="5" width="20" height="14" rx="4" fill="currentColor"/><path d="M10 9l5 3-5 3z" fill="#fff"/></svg>';
+function vidUI(n,vb){return '<button class="vbtn" data-x="vplay" data-vn="'+n+'" data-vb="'+vb+'">'+VICON+'Ver video de técnica</button><div class="vbox" id="'+vb+'"></div>'}
+function stopVid(vb){const b=$(vb);if(b)b.innerHTML=''}
+function offMsg(n,vb){return '<div class="vmsg" role="alert"><b>Sin conexión a internet</b><p>Conéctate a internet para ver el video. El resto de la app funciona sin conexión.</p></div><div class="vact"><button class="lnk" data-x="vplay" data-vn="'+n+'" data-vb="'+vb+'">Reintentar</button><button class="lnk" data-x="vclose" data-vn="'+n+'" data-vb="'+vb+'">Cerrar</button></div>'}
+function playVid(n,vb){const box=$(vb);if(!box)return;const v=vidOf(n);
+if(!navigator.onLine){box.innerHTML=offMsg(n,vb);return}
+if(!v){box.innerHTML='<p class="vmsg">Este ejercicio no tiene video. Puedes agregar uno con Cambiar video.</p>'+vidActs(n,vb);return}
+const src='https://www.youtube-nocookie.com/embed/'+v.id+'?rel=0&modestbranding=1&playsinline=1&iv_load_policy=3&autoplay=1';
+box.innerHTML='<div class="vfr'+(v.s?' sh':'')+'"><iframe src="'+src+'" title="Video de técnica: '+esc(X[n-1][1])+'" referrerpolicy="strict-origin-when-cross-origin" sandbox="allow-scripts allow-same-origin allow-presentation" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen></iframe></div>'+vidActs(n,vb);
+const fr=box.querySelector('iframe');let ok=false;fr.addEventListener('load',()=>{ok=true});
+setTimeout(()=>{if(!ok&&fr.isConnected&&!box.querySelector('.vmsg'))box.insertAdjacentHTML('afterbegin','<p class="vmsg">El video está tardando en cargar. Revisa tu conexión a internet.</p>')},12000)}
+const vidActs=(n,vb)=>'<div class="vact"><button class="lnk" data-x="vclose" data-vn="'+n+'" data-vb="'+vb+'">Cerrar video</button><button class="lnk" data-x="vchange" data-vn="'+n+'" data-vb="'+vb+'">Cambiar video</button></div>';
+function vidAction(a,n,vb){const box=$(vb);if(!box)return;
+if(a==='vplay')playVid(n,vb);
+else if(a==='vclose')stopVid(vb);
+else if(a==='vchange'){box.innerHTML='<div class="vchg"><label for="vurl-'+vb+'">Pega el enlace del video de YouTube</label><input id="vurl-'+vb+'" type="url" inputmode="url" autocomplete="off" placeholder="https://youtu.be/..."><div class="r2"><button class="btn" data-x="vsave" data-vn="'+n+'" data-vb="'+vb+'">Guardar</button><button class="btn alt" data-x="vreset" data-vn="'+n+'" data-vb="'+vb+'">Usar el sugerido</button></div></div>'}
+else if(a==='vsave'){const raw=$('vurl-'+vb).value,id=ytId(raw);if(!id){toast('Ese enlace no es de un video de YouTube');return}S.vids=S.vids||{};S.vids[n]={id,s:/\/shorts\//.test(raw)?1:0};save();toast('Video actualizado');playVid(n,vb)}
+else if(a==='vreset'){if(S.vids)delete S.vids[n];save();toast('Video sugerido restaurado');playVid(n,vb)}}
+window.addEventListener('offline',()=>{for(const vb of ['vb-s','vb-w']){const b=$(vb);if(b&&b.querySelector('iframe')){const n=Number(b.querySelector('[data-vn]').dataset.vn);b.innerHTML=offMsg(n,vb)}}});
 render();
 }
 </script>
